@@ -9,9 +9,6 @@
   License: GPL v2 or later
 */
 
-/**
-* asds
-*/
 class Ntz_Mini_Agregator{
   function __construct(){
     add_shortcode( 'mini-agregator', array( &$this, 'add_shortcode' ) );
@@ -20,7 +17,7 @@ class Ntz_Mini_Agregator{
   public function add_shortcode( $atts, $rss_feeds = null ){
     $parsed_rss = '';
     extract( shortcode_atts( array(
-      "update_interval" => 1
+      "max_items_to_fetch" => 2
     ), $atts ) );
 
     if( $rss_feeds ){
@@ -35,7 +32,7 @@ class Ntz_Mini_Agregator{
         if( !empty( $rss_feed ) ){
           $rss = fetch_feed( $rss_feed );
           if ( !is_wp_error( $rss ) ){
-            $maxitems = $rss->get_item_quantity( 5 );
+            $maxitems = $rss->get_item_quantity( $max_items_to_fetch );
             $feed = $rss->get_items( 0, $maxitems );
             $blogs[] = array(
               "feed" => $feed,
@@ -48,11 +45,12 @@ class Ntz_Mini_Agregator{
       usort( $blogs, array( $this, 'sort_rss_by_date' ) );
 
       foreach( (array) $blogs as $rss_items ){
-        $parsed_rss .= '<ul>';
-        $parsed_rss .= sprintf( '<li><h2>%s - %s</h2></li>',
-          $rss_items['feed'][0]->get_feed()->get_title(),
-          date( 'M j, Y', $rss_items['date'])
+        $parsed_rss .= sprintf( '<h2>%s - %s</h2>',
+          ucwords( $rss_items['feed'][0]->get_feed()->get_title() ),
+          ucwords( $rss_items['feed'][0]->get_feed()->get_description() )
         );
+
+        $parsed_rss .= '<ul>';
 
         foreach( $rss_items['feed'] as $rss_item ){
             $parsed_rss .= '<li>';
