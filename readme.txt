@@ -1,7 +1,7 @@
-=== WordPress Mini Agregator  ===
+=== WordPress Mini Aggregator  ===
 Tags: rss, reader
 Contributors: Ionuț Staicu
-Tested up to: 3.5
+Tested up to: 3.6
 Requires at least: 3.5
 tag: trunk
 License: GPLv2
@@ -26,7 +26,7 @@ Allows you to easily embed a list of blogs RSS so you can display a list of rece
 [mini-aggregator max_items_to_fetch=2]
 http://iamntz.com/feed
 http://another.feed.url
-[/mini-agregator]
+[/mini-aggregator]
 3. Enjoy!
 
 max_items_to_fetch is optional (default is 2) and it is used to set up how many items will be displayed on each blog
