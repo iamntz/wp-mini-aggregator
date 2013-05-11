@@ -1,6 +1,6 @@
 <?php 
 /*
-  Plugin Name: WordPress Mini Agregator
+  Plugin Name: WordPress Mini Aggregator
   Plugin URI: -
   Description: Allows you to easily embed a list of blogs RSS
   Author: Ionuț Staicu
@@ -11,7 +11,7 @@
 
 class Ntz_Mini_Agregator{
   function __construct(){
-    add_shortcode( 'mini-agregator', array( &$this, 'add_shortcode' ) );
+    add_shortcode( 'mini-aggregator', array( &$this, 'add_shortcode' ) );
   }
 
   public function add_shortcode( $atts, $rss_feeds = null ){

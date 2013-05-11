@@ -23,7 +23,7 @@ Allows you to easily embed a list of blogs RSS so you can display a list of rece
 == Usage ==
 1. Create a new page
 2. Add this shortcode:
-[mini-agregator max_items_to_fetch=2]
+[mini-aggregator max_items_to_fetch=2]
 http://iamntz.com/feed
 http://another.feed.url
 [/mini-agregator]
