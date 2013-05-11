@@ -22,8 +22,8 @@ class Ntz_Mini_Agregator{
 
     if( $rss_feeds ){
       include_once( ABSPATH . WPINC . '/feed.php' );
-
-      $blogs = array();
+      set_time_limit( 999999 );
+      $blogs = $failed = array();
 
       $rss_feeds = explode( "\n", $rss_feeds );
 
@@ -34,9 +34,16 @@ class Ntz_Mini_Agregator{
           if ( !is_wp_error( $rss ) ){
             $maxitems = $rss->get_item_quantity( $max_items_to_fetch );
             $feed = $rss->get_items( 0, $maxitems );
+            if( empty( $feed ) ){
+              $failed[] = $rss_feed;
+              continue;
+            }
+
+            $date = $feed[0]->get_date();
+
             $blogs[] = array(
               "feed" => $feed,
-              "date" => strtotime( $feed[0]->get_date() )
+              "date" => strtotime( $date)
             );
           }
         }
@@ -46,20 +53,31 @@ class Ntz_Mini_Agregator{
 
       foreach( (array) $blogs as $rss_items ){
         $parsed_rss .= sprintf( '<h2>%s - %s</h2>',
-          ucwords( $rss_items['feed'][0]->get_feed()->get_title() ),
-          ucwords( $rss_items['feed'][0]->get_feed()->get_description() )
+          ucwords( strip_tags( $rss_items['feed'][0]->get_feed()->get_title() ) ),
+          ucwords( strip_tags( $rss_items['feed'][0]->get_feed()->get_description() ) )
         );
 
         $parsed_rss .= '<ul>';
 
         foreach( $rss_items['feed'] as $rss_item ){
             $parsed_rss .= '<li>';
-            $parsed_rss .= sprintf( '<a href="%s">%s</a>', 
+            $parsed_rss .= sprintf( '<a href="%s">%s</a> <small>%s</small>', 
               $rss_item->get_permalink(),
-              $rss_item->get_title()
+              $rss_item->get_title(),
+              $rss_item->get_date()
             );
         }
         $parsed_rss .= '</ul>';
+      }
+
+      if( !empty( $failed ) ){
+        $parsed_rss .= '<h2>Fail to fetch</h2>';
+        $parsed_rss .= '<ul>';
+        foreach( (array) $failed as $fail ){
+          $parsed_rss .= sprintf( '<li><a href="%s">%s</a></li>', $fail, $fail );
+        }
+        $parsed_rss .= '</ul>';
+
       }
     }
 
